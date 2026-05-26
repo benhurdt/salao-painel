@@ -407,6 +407,10 @@ tr:hover td{background:var(--surface2)}
       </div>
 
       <!-- Agendamento manual -->
+      <div class="sec-title" style="display:flex;align-items:center;justify-content:space-between">
+        <span>Agendamentos</span>
+        <button onclick="limparAgendamentos()" style="background:var(--verm-bg);border:1px solid var(--verm-bd);color:var(--verm);font-size:11px;font-family:'Nunito',sans-serif;padding:4px 12px;border-radius:6px;cursor:pointer;font-weight:700">🗑 Limpar todos</button>
+      </div>
       <div class="sec-title">Novo agendamento manual</div>
       <div class="form-agend">
         <div class="form-agend-title">✏️ Agendar pelo painel</div>
@@ -838,8 +842,24 @@ function renderAgenda(){
       <td style="display:flex;gap:5px;flex-wrap:wrap">
         ${a.status!=='confirmado'?`<button class="btn-sm verde" onclick="mudarStatus('${a.id}','confirmado')">✓ Conf.</button>`:''}
         ${a.status!=='cancelado'?`<button class="btn-sm" style="border-color:var(--verm-bd);color:var(--verm)" onclick="mudarStatus('${a.id}','cancelado')">✗ Canc.</button>`:''}
+        <button class="btn-sm" style="border-color:var(--verm-bd);color:var(--verm);background:var(--verm-bg)" onclick="excluirAgendamento('${a.id}')">🗑</button>
       </td>
     </tr>`).join('');
+}
+
+function limparAgendamentos(){
+  if(!agendamentos.length){ toast('Nenhum agendamento para limpar'); return; }
+  agendamentos = [];
+  salvar(KEY_AG, agendamentos);
+  renderAgenda();
+  toast('Todos os agendamentos foram removidos');
+}
+
+function excluirAgendamento(id){
+  agendamentos = agendamentos.filter(a=>a.id!==id);
+  salvar(KEY_AG, agendamentos);
+  renderAgenda();
+  toast('Agendamento excluído');
 }
 
 function mudarStatus(id, status){
