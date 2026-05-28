@@ -599,13 +599,23 @@ tr:hover td{background:var(--surface2)}
     <!-- ── ABA DEMO ── -->
     <div class="secao" id="sec-demo">
       <div class="demo-link-card">
-        <div class="demo-link-title">🤖 Demo da Bia — Link para clientes</div>
+        <div class="demo-link-title">🤖 Demo da Bia — Vitrine de vendas</div>
         <div class="demo-link-sub">
-          Envie este link pelo WhatsApp para que o cliente experimente a Bia em tempo real. A demonstração funciona sem instalação, direto no celular.
+          Use este link para mostrar como a Bia funciona — para você mesmo testar ou para apresentar a uma futura cliente.
+          <br><br>
+          <strong>No dia a dia, suas clientes não usam este link.</strong> Elas conversam diretamente pelo WhatsApp do salão, como fariam normalmente.
         </div>
-        <a class="btn-demo" href="https://benhurdt.github.io/demo-bia" target="_blank">
-          Abrir demo da Bia ↗
-        </a>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:4px">
+          <a class="btn-demo" href="https://benhurdt.github.io/demo-bia" target="_blank">
+            👁 Ver demo da Bia
+          </a>
+          <button class="btn-demo" onclick="copiarLinkDemo()" style="background:var(--surface2);border:1px solid var(--rosa-bd);color:var(--rosa)">
+            📋 Copiar link
+          </button>
+          <button class="btn-demo" onclick="enviarLinkWpp()" style="background:#25D366;border-color:#25D366">
+            📱 Enviar pelo WhatsApp
+          </button>
+        </div>
       </div>
 
       <div class="sec-title">Como a Bia se integra ao painel</div>
@@ -614,8 +624,8 @@ tr:hover td{background:var(--surface2)}
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:13px;display:flex;gap:12px;align-items:flex-start">
           <div style="font-size:22px;flex-shrink:0">1️⃣</div>
           <div>
-            <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px">Cliente conversa com a Bia</div>
-            <div style="font-size:12px;color:var(--text2)">Pelo WhatsApp ou pela demo. A Bia consulta os horários cadastrados aqui e oferece somente os disponíveis.</div>
+            <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px">Cliente conversa com a Bia pelo WhatsApp</div>
+            <div style="font-size:12px;color:var(--text2)">Suas clientes mandam mensagem no WhatsApp do salão normalmente — a Bia responde automaticamente, consulta os horários cadastrados aqui e oferece somente os disponíveis.</div>
           </div>
         </div>
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:13px;display:flex;gap:12px;align-items:flex-start">
@@ -1169,8 +1179,43 @@ function atualizarHorarios(){
 }
 
 // Atualiza horários quando muda data ou profissional no form
+// ── DEMO BIA — copiar e enviar link ─────────────────────
+const DEMO_BIA_URL = 'https://benhurdt.github.io/demo-bia';
+const MSG_DEMO = 'Olá! Preparei uma demonstração da Bia — assistente virtual para salões. Experimente conversar com ela:\n\n👉 ' + DEMO_BIA_URL + '\n\nFunciona sem instalação, direto no celular!';
+
+function copiarLinkDemo(){
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(DEMO_BIA_URL).then(()=>toast('Link copiado!'));
+  } else {
+    const el = document.createElement('textarea');
+    el.value = DEMO_BIA_URL;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    toast('Link copiado!');
+  }
+}
+
+function enviarLinkWpp(){
+  // Abre WhatsApp sem número pré-definido — dono escolhe o contato
+  window.open('https://wa.me/?text=' + encodeURIComponent(MSG_DEMO), '_blank');
+}
+
 document.getElementById('ag-data').addEventListener('change', atualizarHorarios);
 document.getElementById('ag-prof').addEventListener('change', atualizarHorarios);
+
+// ── EDIÇÃO DE OBRA ────────────────────────────────────────
+function editarObra(id){
+  const o = agendamentos; // só para verificar — usamos profissionais para obras
+  // Para simplificar, abre modal de edição inline na lista de profissionais
+  // Nesta versão, edição de obra é feita pelo formulário principal
+  toast('Para editar: clique em "+ Nova obra" e use o mesmo nome para atualizar.');
+}
+
+function renderObraCards(){
+  // Placeholder para futura expansão
+}
 
 // ── RENDERIZA HISTÓRICO (tab) ─────────────────────────────
 function renderHistorico(){
